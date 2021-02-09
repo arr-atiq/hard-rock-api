@@ -1,6 +1,6 @@
 const searchSong = () => {
     const searchText = document.getElementById('searchText').value;
-    const url = `https://api.lyrics.ovh/suggest/:${searchText}`
+    const url = `https://api.lyrics.ovh/suggest/${searchText}`
     
     fetch(url)
     .then(res => res.json())
@@ -9,6 +9,7 @@ const searchSong = () => {
 
 const displaySong = songs => {
     const songContainer = document.getElementById('song-container');
+    songContainer.innerHTML = ''
     songs.forEach(song => {
         const songsDiv = document.createElement('div');
         songsDiv.className = 'single-result row align-items-center my-3 p-3';
@@ -21,10 +22,19 @@ const displaySong = songs => {
                         </audio>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button onclick="getLyric('${song.artist.name}', '${song.title}')" class="btn btn-success">Get Lyrics</button>
                     </div>`;
         songContainer.appendChild(songsDiv);
     });
 }
 
-// const getLyric()
+const getLyric = (name, line) => {
+    const url = `https://api.lyrics.ovh/v1/${name}/${line}`
+    fetch(url)
+    .then(res => res.json())
+    .then(data =>displayLyric(data.lyrics))
+}
+const displayLyric = (lyric) =>{
+    const lyricDiv = document.getElementById('song-lyric');
+    lyricDiv.innerText = lyric;
+}
